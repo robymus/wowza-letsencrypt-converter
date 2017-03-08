@@ -1,0 +1,28 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+
+group = "io.r2"
+archivesBaseName = "wowza-letsencrypt-converter"
+version = "0.1-SNAPSHOT"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile (
+    )
+    testCompile (
+        'org.testng:testng:6.10',
+        'org.assertj:assertj-core:3.6.2',
+        'org.mockito:mockito-core:2.7.14'
+    )
+}
+
+test {
+    useTestNG()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
