@@ -10,7 +10,7 @@ Wowza Streaming Engine can reload domain mapped keystores when the keystore map 
 gradle jar
 ```
 
-Or download a precompiled jar from [Releases](https://github.com/robymus/wowza-letsencrypt-converter).
+Or download a precompiled jar from [Releases](https://github.com/robymus/wowza-letsencrypt-converter/releases).
 
 ## Usage
 
