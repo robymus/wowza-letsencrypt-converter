@@ -13,14 +13,18 @@ gradle jar
 ## Usage
 
 ```Shell
-java -jar wowza-letsencrypt-converter-0.1.jar <letsencrypt-live-path> <output-path>
+java -jar wowza-letsencrypt-converter-0.1.jar [-v] <output-path> [<letsencrypt-live-path>] 
 ```
 
-The  *letsencrypt-live-path* parameter should be /etc/letsencrypt/live in common Linux systems, might be different on others (not tested). The *output-path* must be an existing and writable directory, here a new JKS keystore will be created for every certificate in the input directory together with a file jksmap.txt containing the domain to keystore mapping to be used in the VHost.xml of Wowza Streaming Engine.
+The  *letsencrypt-live-path* parameter defaults to /etc/letsencrypt/live, as is in common Linux systems, might be different on others. The *output-path* must be an existing and writable directory, here a new JKS keystore will be created for every certificate in the input directory together with a file jksmap.txt containing the domain to keystore mapping to be used in the VHost.xml of Wowza Streaming Engine.
 
 The generated JKS password will be 'secret'.
 
 Feel free to fork if you need additional functionality.
+
+## Real life
+
+Tested on Amazon Linux with Wowza Streaming Engine 4.6.0.
 
 ## License
 
@@ -28,6 +32,6 @@ Licensed under the MIT license.
  
 ## Requirements
 
-Java 8 is required to compile or run.
+Java 8 is required to compile and run.
 No external dependencies to keep the tool tidy and simple.
 

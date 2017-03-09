@@ -1,9 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'jacoco'
+apply plugin: 'application'
+
+mainClassName = 'io.r2.wowzaletsencrypt.Converter'
 
 group = "io.r2"
 archivesBaseName = "wowza-letsencrypt-converter"
-version = "0.1-SNAPSHOT"
+version = "0.1"
 
 repositories {
     jcenter()
@@ -15,8 +18,14 @@ dependencies {
     testCompile (
         'org.testng:testng:6.10',
         'org.assertj:assertj-core:3.6.2',
-        'org.mockito:mockito-core:2.7.14'
+        'com.fasterxml.jackson.core:jackson-databind:2.9.0.pr1'
     )
+}
+
+jar {
+	manifest {
+		attributes('Main-Class': mainClassName)
+	}
 }
 
 test {
