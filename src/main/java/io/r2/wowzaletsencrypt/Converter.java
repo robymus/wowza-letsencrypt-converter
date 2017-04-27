@@ -155,7 +155,7 @@ public class Converter {
                 domains.forEach((domain, certID)->
                     f.printf("%s={\"keyStorePath\":\"%s\", \"keyStorePassword\":\"%s\", \"keyStoreType\":\"JKS\"}\n",
                                 jsonEscape(domain),
-                                jsonEscape(outputPath.resolve(jksName).toAbsolutePath().toString()),
+                                jsonEscape(outputPath.resolve(certID+".jks").toAbsolutePath().toString()),
                                 jsonEscape(password)
                             )
                 );
