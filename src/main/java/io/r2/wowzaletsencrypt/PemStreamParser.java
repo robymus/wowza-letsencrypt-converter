@@ -97,7 +97,7 @@ public class PemStreamParser {
      *
      * @see PemStreamParser#parse(ChunkConsumer)
      */
-    public static void parse(InputStream in, ChunkConsumer consumer) throws IOException, CertificateException, NoSuchAlgorithmException{
+    public static void parse(InputStream in, ChunkConsumer consumer) throws IOException, CertificateException, NoSuchAlgorithmException {
         new PemStreamParser(in).parse(consumer);
     }
 
@@ -107,7 +107,6 @@ public class PemStreamParser {
      */
     @FunctionalInterface
     public interface ChunkConsumer {
-
-        void accept(ChunkType chunkType, List<String> chunk) throws CertificateException, NoSuchAlgorithmException ;
+        void accept(ChunkType chunkType, List<String> chunk) throws CertificateException, NoSuchAlgorithmException;
     }
 }
