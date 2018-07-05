@@ -13,8 +13,6 @@ repositories {
 }
 
 dependencies {
-    compile (
-    )
     testCompile (
         'org.testng:testng:6.10',
         'org.assertj:assertj-core:3.6.2',
