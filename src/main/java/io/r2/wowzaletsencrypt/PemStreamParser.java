@@ -18,7 +18,7 @@ public class PemStreamParser {
 
     protected InputStream in;
 
-    public enum ChunkType { certificate, key };
+    public enum ChunkType { certificate, pkcs8_key, pkcs1_key };
 
     public PemStreamParser(InputStream in) {
         this.in = in;
@@ -69,9 +69,15 @@ public class PemStreamParser {
                             break;
                         case "-----BEGIN PRIVATE KEY-----":
                             chunk.add(line);
-                            currentChunkType = ChunkType.key;
+                            currentChunkType = ChunkType.pkcs8_key;
                             inChunk = true;
                             chunkEndMarker = "-----END PRIVATE KEY-----";
+                            break;
+                        case "-----BEGIN RSA PRIVATE KEY-----":
+                            chunk.add(line);
+                            currentChunkType = ChunkType.pkcs1_key;
+                            inChunk = true;
+                            chunkEndMarker = "-----END RSA PRIVATE KEY-----";
                             break;
                         default:
                             throw new CertificateException("Invalid chunk in input");

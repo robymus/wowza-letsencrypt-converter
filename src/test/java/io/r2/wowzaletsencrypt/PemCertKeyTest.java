@@ -28,6 +28,11 @@ public class PemCertKeyTest {
     }
 
     @Test
+    public void testCertAcme() throws Exception {
+        doTestCert("src/test/resources/pem/acme-cert.pem");
+    }
+
+    @Test
     public void testKey() throws Exception {
         doTestKey("src/test/resources/pem/key.pem");
     }
@@ -36,6 +41,12 @@ public class PemCertKeyTest {
     public void testKeyBlankLine() throws Exception {
         doTestKey("src/test/resources/pem/key-with-two-trailing-blank-lines.pem");
     }
+
+    @Test
+    public void testKeyAcme() throws Exception {
+        doTestKey("src/test/resources/pem/acme-key.pem");
+    }
+
 
     @Test
     public void testCertKey() throws Exception {
@@ -53,6 +64,13 @@ public class PemCertKeyTest {
         );
     }
 
+    @Test
+    public void testCertKeyAcme() throws Exception {
+        doTestCertKey(
+                "src/test/resources/pem/acme-fullchain.pem",
+                "src/test/resources/pem/acme-key.pem"
+        );
+    }
 
     public void doTestCert(String fn) throws Exception {
         InputStream in = new FileInputStream(fn);

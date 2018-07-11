@@ -1,17 +1,15 @@
 package io.r2.wowzaletsencrypt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -30,34 +28,18 @@ public class ConverterTest {
 
     Path outDir;
 
-    @BeforeClass
+    @BeforeTest
     public void setUp() throws Exception {
         outDir = Files.createTempDirectory("wlconvert");
     }
 
-    @AfterClass
+    @AfterTest
     public void tearDown() throws Exception {
         // delete temporary out directory recursively
         Files.walk(outDir)
                 .sorted(Comparator.reverseOrder())
                 .map(Path::toFile)
                 .forEach(File::delete);
-    }
-
-    private void checkResults() throws Exception {
-        // test map
-        Path map = outDir.resolve("jksmap.txt");
-        assertThat(map).isRegularFile();
-        List<String> mapLines = Files.lines(map).collect(Collectors.toList());
-
-        assertThat(mapLines.size()).isEqualTo(6);
-
-        checkLine(mapLines, "multi-1.not-secure.r2.io");
-        checkLine(mapLines, "multi-2.not-secure.r2.io");
-        checkLine(mapLines, "multi-3.not-secure.r2.io");
-        checkLine(mapLines, "not-secure.r2.io");
-        checkLine(mapLines, "www.not-secure.r2.io");
-        checkLine(mapLines, "single.not-secure.r2.io");
     }
 
     private void checkLine(List<String> mapLines, String domain) throws Exception {
@@ -95,16 +77,57 @@ public class ConverterTest {
         assertThat(dnsNames).contains(domain);
     }
 
+    private void checkResultsLetsEncrypt() throws Exception {
+        // test map
+        Path map = outDir.resolve("jksmap.txt");
+        assertThat(map).isRegularFile();
+        List<String> mapLines = Files.lines(map).collect(Collectors.toList());
+
+        assertThat(mapLines.size()).isEqualTo(6);
+
+        checkLine(mapLines, "multi-1.not-secure.r2.io");
+        checkLine(mapLines, "multi-2.not-secure.r2.io");
+        checkLine(mapLines, "multi-3.not-secure.r2.io");
+        checkLine(mapLines, "not-secure.r2.io");
+        checkLine(mapLines, "www.not-secure.r2.io");
+        checkLine(mapLines, "single.not-secure.r2.io");
+    }
+
     @Test
-    public void testProcess() throws Exception {
+    public void testProcessLetsEncrypt() throws Exception {
         Converter c = new Converter(
                 "src/test/resources/letsencrypt",
                 outDir.toAbsolutePath().toString()
         );
         assertThat(c.readCertificates()).isTrue();
         assertThat(c.writeJKS()).isTrue();
-        checkResults();
+        checkResultsLetsEncrypt();
     }
+
+    private void checkResultsAcme() throws Exception {
+        // test map
+        Path map = outDir.resolve("jksmap.txt");
+        assertThat(map).isRegularFile();
+        List<String> mapLines = Files.lines(map).collect(Collectors.toList());
+
+        assertThat(mapLines.size()).isEqualTo(1);
+
+        checkLine(mapLines, "not-secure-acme.r2.io");
+    }
+
+
+
+    @Test
+    public void testProcessAcme() throws Exception {
+        Converter c = new Converter(
+                "src/test/resources/acme.sh",
+                outDir.toAbsolutePath().toString()
+        );
+        assertThat(c.readCertificates()).isTrue();
+        assertThat(c.writeJKS()).isTrue();
+        checkResultsAcme();
+    }
+
 
     public static class JsonData {
         public String keyStorePath;

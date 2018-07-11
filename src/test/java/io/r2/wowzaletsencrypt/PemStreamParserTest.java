@@ -26,7 +26,7 @@ public class PemStreamParserTest {
         assertThat(chunks).containsExactly(
                 PemStreamParser.ChunkType.certificate,
                 PemStreamParser.ChunkType.certificate,
-                PemStreamParser.ChunkType.key
+                PemStreamParser.ChunkType.pkcs8_key
         );
         assertThat(parsed).containsExactly(
                 "-----BEGIN CERTIFICATE-----\n" +
@@ -43,6 +43,38 @@ public class PemStreamParserTest {
                 "key1\n" +
                 "datak1\n" +
                 "-----END PRIVATE KEY-----"
+        );
+    }
+
+    @Test
+    public void testParseOkAcme() throws Exception {
+        FileInputStream in = new FileInputStream("src/test/resources/pem/parser-ok-acme.pem");
+        ArrayList<PemStreamParser.ChunkType> chunks = new ArrayList<>();
+        ArrayList<String> parsed = new ArrayList<>();
+        PemStreamParser.parse(in, (type, chunk) -> {
+            chunks.add(type);
+            parsed.add(chunk.stream().collect(Collectors.joining("\n")));
+        });
+        assertThat(chunks).containsExactly(
+                PemStreamParser.ChunkType.certificate,
+                PemStreamParser.ChunkType.certificate,
+                PemStreamParser.ChunkType.pkcs1_key
+        );
+        assertThat(parsed).containsExactly(
+                "-----BEGIN CERTIFICATE-----\n" +
+                "cert1\n" +
+                "data1\n" +
+                "-----END CERTIFICATE-----",
+
+                "-----BEGIN CERTIFICATE-----\n" +
+                "cert2\n" +
+                "data2\n" +
+                "-----END CERTIFICATE-----",
+
+                "-----BEGIN RSA PRIVATE KEY-----\n" +
+                "key1\n" +
+                "datak1\n" +
+                "-----END RSA PRIVATE KEY-----"
         );
     }
 

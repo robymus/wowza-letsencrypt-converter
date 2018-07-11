@@ -12,7 +12,9 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPrivateKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -66,8 +68,9 @@ public class PemCertKey {
                 case certificate:
                     addCertificate(chunk);
                     break;
-                case key:
-                    setPrivateKey(chunk);
+                case pkcs8_key:
+                case pkcs1_key:
+                    setPrivateKey(chunk, type);
                     break;
             }
         });
@@ -80,22 +83,37 @@ public class PemCertKey {
      * Internal method used during parsing : sets the private key in this entry
      *
      * @param key the chunk containing certificate
+     * @param chunkType pkcs8_key or rsa_key - other values throw NoSuchAlgorithmException
      * @throws CertificateException if key already exists
      */
-    private void setPrivateKey(List<String> key) throws CertificateException, NoSuchAlgorithmException {
+    private void setPrivateKey(List<String> key, PemStreamParser.ChunkType chunkType) throws CertificateException, NoSuchAlgorithmException {
         if (privateKey != null) throw new CertificateException("More than one private key in PEM input");
 
         String b64key = key.subList(1, key.size()-1).stream().collect(Collectors.joining());
         byte[] binKey = Base64.getDecoder().decode(b64key);
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(binKey);
+
+        KeySpec keySpec;
+
+        switch (chunkType) {
+            case pkcs8_key:
+                keySpec = new PKCS8EncodedKeySpec(binKey);
+                break;
+            case pkcs1_key:
+                keySpec = new PKCS8EncodedKeySpec(PKCS1Converter.toPKCS8(binKey));
+                break;
+            default:
+                // this should not happen, as it is called only for matching types
+                throw new NoSuchAlgorithmException("Invalid private key type: "+chunkType);
+        }
 
         KeyFactory kf = KeyFactory.getInstance("RSA");
         try {
             privateKey = kf.generatePrivate(keySpec);
         }
         catch (InvalidKeySpecException e) {
-            throw new CertificateException(e);
+            throw new NoSuchAlgorithmException(e);
         }
+
     }
 
     /**

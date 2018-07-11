@@ -6,7 +6,7 @@ mainClassName = 'io.r2.wowzaletsencrypt.Converter'
 
 group = "io.r2"
 archivesBaseName = "wowza-letsencrypt-converter"
-version = "0.2-SNAPSHOT"
+version = "0.2"
 
 repositories {
     jcenter()
