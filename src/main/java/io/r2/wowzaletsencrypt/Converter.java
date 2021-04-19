@@ -111,9 +111,10 @@ public class Converter {
      * Writes certificates in JKS format
      * @return true if writing was successful
      */
-    public boolean writeJKS() {
+    public boolean writeJKS(String password) {
         // hardcoded password
-        String password = "secret";
+        // need change default password
+        //String password = "secret";
         char[] passwordChr = password.toCharArray();
         // hardcoded alias for Wowza Streaming Engine
         String alias = "server";
@@ -185,6 +186,9 @@ public class Converter {
         boolean verbose = false;
         String outputPath;
         String inputPath = "/etc/letsencrypt/live";
+        // hardcoded password
+        // need change default password
+        String password = "secret"
 
         int idx = 0;
         if (idx < args.length && args[idx].equals("-v")) {
@@ -199,6 +203,8 @@ public class Converter {
 
         outputPath = args[idx++];
         if (idx < args.length) inputPath = args[idx++];
+        
+        if (idx < args.length) password = args[idx++];
         // extra arguments are ignored
 
         if (verbose) {
@@ -213,7 +219,7 @@ public class Converter {
             System.exit(2);
         }
 
-        if (!c.writeJKS()) {
+        if (!c.writeJKS(password)) {
             System.err.println("Error writing output, aborting. Note: partial changes might be written already!");
             System.exit(3);
         }
