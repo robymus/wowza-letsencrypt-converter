@@ -188,7 +188,7 @@ public class Converter {
         String inputPath = "/etc/letsencrypt/live";
         // hardcoded password
         // need change default password
-        String password = "secret"
+        String password = "secret";
 
         int idx = 0;
         if (idx < args.length && args[idx].equals("-v")) {
