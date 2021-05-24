@@ -15,12 +15,12 @@ Or download a precompiled jar from [Releases](https://github.com/robymus/wowza-l
 ## Usage
 
 ```Shell
-java -jar wowza-letsencrypt-converter-0.2.jar [-v] <output-path> [<letsencrypt-live-path>] 
+java -jar wowza-letsencrypt-converter-0.2.jar [-v] <output-path> [<letsencrypt-live-path>] [<password>]
 ```
 
 The  *letsencrypt-live-path* parameter defaults to /etc/letsencrypt/live, as is in common Linux systems, might be different on others. The *output-path* must be an existing and writable directory, here a new JKS keystore will be created for every certificate in the input directory together with a file jksmap.txt containing the domain to keystore mapping to be used in the VHost.xml of Wowza Streaming Engine.
 
-The generated JKS password will be 'secret'.
+The generated JKS default password will be 'secret'.
 
 Feel free to fork if you need additional functionality.
 
